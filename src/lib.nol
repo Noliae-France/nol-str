@@ -1,0 +1,139 @@
+// nol.str — utilitaires de chaînes en pur Nolc.
+//
+// Les petites fonctions qui manquent toujours : capitaliser, tronquer, remplir
+// (pad), mettre en Titre, compter, inverser, retirer préfixe/suffixe.
+
+// Première lettre en majuscule, reste inchangé.
+fn capitalise(s: Text) -> Text {
+    if len(s) == 0 {
+        return s
+    }
+    return upper(sub(s, 0, 1)) + sub(s, 1, len(s) - 1)
+}
+
+// Chaque mot capitalisé (séparateur : espace).
+fn titre(s: Text) -> Text {
+    var out = ""
+    var premier = true
+    for mot in split(s, " ") {
+        if not premier {
+            out = out + " "
+        }
+        out = out + capitalise(mot)
+        premier = false
+    }
+    return out
+}
+
+// Complète à gauche jusqu'à `largeur` avec `rembourrage` (1 caractère).
+fn pad_gauche(s: Text, largeur: Int, rembourrage: Text) -> Text {
+    var out = s
+    while len(out) < largeur {
+        out = rembourrage + out
+    }
+    return out
+}
+
+// Complète à droite jusqu'à `largeur`.
+fn pad_droite(s: Text, largeur: Int, rembourrage: Text) -> Text {
+    var out = s
+    while len(out) < largeur {
+        out = out + rembourrage
+    }
+    return out
+}
+
+// Tronque à `max` caractères, en ajoutant `suffixe` si coupé.
+fn tronque(s: Text, max: Int, suffixe: Text) -> Text {
+    if len(s) <= max {
+        return s
+    }
+    let garde = max - len(suffixe)
+    if garde <= 0 {
+        return sub(s, 0, max)
+    }
+    return sub(s, 0, garde) + suffixe
+}
+
+// Nombre d'occurrences (sans chevauchement) de `motif` dans `s`.
+fn compte(s: Text, motif: Text) -> Int {
+    if len(motif) == 0 {
+        return 0
+    }
+    var n = 0
+    var reste = s
+    var i = unwrap_or(find(reste, motif), -1)
+    while i >= 0 {
+        n += 1
+        reste = sub(reste, i + len(motif), len(reste) - i - len(motif))
+        i = unwrap_or(find(reste, motif), -1)
+    }
+    return n
+}
+
+// Retire `prefixe` en tête s'il est présent.
+fn enleve_prefixe(s: Text, prefixe: Text) -> Text {
+    if starts_with(s, prefixe) {
+        return sub(s, len(prefixe), len(s) - len(prefixe))
+    }
+    return s
+}
+
+// Retire `suffixe` en fin s'il est présent.
+fn enleve_suffixe(s: Text, suffixe: Text) -> Text {
+    let n = len(s)
+    let m = len(suffixe)
+    if m > 0 and m <= n and sub(s, n - m, m) == suffixe {
+        return sub(s, 0, n - m)
+    }
+    return s
+}
+
+// Inverse l'ordre des caractères.
+fn inverse(s: Text) -> Text {
+    var out = ""
+    var i = len(s) - 1
+    while i >= 0 {
+        out = out + char_at(s, i)
+        i -= 1
+    }
+    return out
+}
+
+// ============================ TESTS ============================
+
+fn test_capitalise() {
+    assert(capitalise("bonjour") == "Bonjour", "capitalise")
+    assert(capitalise("") == "", "vide")
+}
+
+fn test_titre() {
+    assert(titre("le petit chat") == "Le Petit Chat", "titre")
+}
+
+fn test_pad() {
+    assert(pad_gauche("7", 3, "0") == "007", "pad gauche")
+    assert(pad_droite("7", 3, ".") == "7..", "pad droite")
+    assert(pad_gauche("deja", 2, "0") == "deja", "deja assez long")
+}
+
+fn test_tronque() {
+    assert(tronque("bonjour", 4, "...") == "b...", "tronque avec suffixe")
+    assert(tronque("court", 10, "...") == "court", "pas tronque")
+}
+
+fn test_compte() {
+    assert(compte("abababab", "ab") == 4, "compte")
+    assert(compte("aaa", "aa") == 1, "sans chevauchement")
+    assert(compte("xyz", "w") == 0, "absent")
+}
+
+fn test_prefixe_suffixe() {
+    assert(enleve_prefixe("unittest", "unit") == "test", "prefixe")
+    assert(enleve_suffixe("fichier.txt", ".txt") == "fichier", "suffixe")
+    assert(enleve_prefixe("abc", "z") == "abc", "prefixe absent")
+}
+
+fn test_inverse() {
+    assert(inverse("abc") == "cba", "inverse")
+}

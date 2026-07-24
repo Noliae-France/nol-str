@@ -1,0 +1,9 @@
+[projet]
+nom = "nol-str"
+version = "0.1.0"
+entree = "src/lib.nol"
+auteur = "Bastien LANGUEDOC"
+licence = "MIT"
+description = "Utilitaires de chaines en pur Nolc : capitalise, tronque, pad, titre, compte, inverse."
+
+[dependances]

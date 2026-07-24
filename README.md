@@ -1,0 +1,24 @@
+# nol.str
+
+Utilitaires de chaînes en pur [Nolc](https://github.com/Noliae-France/nolc), sans dépendance.
+
+## Installation
+
+```toml
+[dependances]
+"nol-str" = { git = "https://github.com/Noliae-France/nol-str" }
+```
+
+## API
+`capitalise`, `titre`, `pad_gauche`, `pad_droite`, `tronque(max, suffixe)`, `compte(motif)`, `enleve_prefixe`, `enleve_suffixe`, `inverse`.
+
+```nol
+capitalise("bonjour")            // "Bonjour"
+titre("le petit chat")           // "Le Petit Chat"
+pad_gauche("7", 3, "0")          // "007"
+tronque("bonjour", 4, "...")     // "b..."
+```
+
+## Licence
+
+MIT © 2026 Bastien LANGUEDOC.
