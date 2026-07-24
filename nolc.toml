@@ -2,7 +2,7 @@
 nom = "nol-str"
 version = "0.1.0"
 entree = "src/lib.nol"
-auteur = "Bastien LANGUEDOC"
+auteur = "daliranas <bastien@languedoc.ovh>"
 licence = "MIT"
 description = "Utilitaires de chaines en pur Nolc : capitalise, tronque, pad, titre, compte, inverse."
 
